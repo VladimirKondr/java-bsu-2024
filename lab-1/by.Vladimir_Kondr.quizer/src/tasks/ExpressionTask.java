@@ -7,13 +7,13 @@ import tasks.math.MathTask;
 public class ExpressionTask extends AbstractMathTask {
     private final int answer;
 
-    public ExpressionTask(int a, int b, Operation op) throws IllegalArgumentException {
+    public ExpressionTask(int a, int b, Operation op) {
         super(op, a, b);
         this.answer = computeAnswer();
     }
 
     @Override
-    protected int computeAnswer() throws IllegalArgumentException {
+    protected int computeAnswer() {
         try {
             return op.perform(left, right);
         } catch (ArithmeticException e) {
@@ -32,7 +32,7 @@ public class ExpressionTask extends AbstractMathTask {
     @Override
     public String getText() {
         String text = left + " " + op.getSymbol() + " " + right + " = ?";
-        text += String.format(" (если ответ нецелый, укажите его с точностью до %d-х знаков после запятой, с округлением вниз)", MathTask.Operation.getAccuracy());
+        text += String.format(" (если ответ нецелый, укажите его с точностью до %d-х знаков после запятой, с округлением вниз)", (int) MathTask.Operation.getAccuracy());
         return text;
     }
 

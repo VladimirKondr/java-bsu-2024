@@ -1,7 +1,5 @@
 package tasks.math;
 
-import core.Result;
-
 public abstract class AbstractMathTask implements MathTask {
     protected final Operation op;
     protected final int left;
@@ -14,7 +12,7 @@ public abstract class AbstractMathTask implements MathTask {
         this.right = 0;
     }
 
-    protected AbstractMathTask(Operation op, int left, int right) throws IllegalArgumentException {
+    protected AbstractMathTask(Operation op, int left, int right) {
         this.op = op;
         this.left = left;
         this.right = right;

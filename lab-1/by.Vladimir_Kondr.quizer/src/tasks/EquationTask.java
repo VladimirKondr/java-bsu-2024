@@ -8,7 +8,7 @@ public class EquationTask extends AbstractMathTask {
     private final boolean isXFirst;
     private final int answer;
 
-    public EquationTask(int a, Operation op, int result, boolean isXFirst) throws IllegalArgumentException {
+    public EquationTask(int a, Operation op, int result, boolean isXFirst) {
         super(op, a, result);
         this.isXFirst = isXFirst;
         this.answer = computeAnswer();
@@ -38,7 +38,7 @@ public class EquationTask extends AbstractMathTask {
         } else {
             text = left + " " + op.getSymbol() + " x" + " = " + right;
         }
-        text += String.format(" (если ответ нецелый, укажите его с точностью до %d-х знаков после запятой, с округлением вниз)", MathTask.Operation.getAccuracy());
+        text += String.format(" (если ответ нецелый, укажите его с точностью до %d-х знаков после запятой, с округлением вниз)", (int) MathTask.Operation.getAccuracy());
         return text;
     }
 

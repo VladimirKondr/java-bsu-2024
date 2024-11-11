@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class PoolTaskGenerator implements TaskGenerator<Task> {
     private final boolean allowDuplicate;
-    private final Collection<Task> tasks;
+    private final ArrayList<Task> tasks;
     public PoolTaskGenerator(
             boolean allowDuplicate,
             Task... tasks
@@ -25,7 +25,7 @@ public class PoolTaskGenerator implements TaskGenerator<Task> {
             Collection<Task> tasks
     ) {
         this.allowDuplicate = allowDuplicate;
-        this.tasks = tasks;
+        this.tasks = (ArrayList<Task>) tasks;
     }
 
     public int getSize() {
@@ -37,18 +37,15 @@ public class PoolTaskGenerator implements TaskGenerator<Task> {
     }
 
     @Override
-    public Task generate() throws EndOfPoolException {
+    public Task generate() {
         Random random = new Random();
         if (tasks.isEmpty()) {
             throw new EndOfPoolException("Generation of task is impossible, pool of tasks is empty");
         }
-        var iterator = tasks.iterator();
-        for (int index = random.nextInt(tasks.size()); index > 0; index--) {
-            iterator.next();
-        }
-        Task task = iterator.next();
+        int index = random.nextInt(tasks.size());
+        Task task = tasks.get(index);
         if (!allowDuplicate) {
-            iterator.remove();
+            tasks.remove(index);
         }
         return task;
     }

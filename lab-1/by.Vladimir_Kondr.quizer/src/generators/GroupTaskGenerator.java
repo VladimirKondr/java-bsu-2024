@@ -9,7 +9,7 @@ import exceptions.NoSufficientGeneratorsException;
 import java.util.*;
 
 public class GroupTaskGenerator extends GeneratorCreator implements TaskGenerator<Task> {
-    private final Collection<TaskGenerator<? extends Task>> generators;
+    private final ArrayList<TaskGenerator<? extends Task>> generators;
     private final List<Pair<Class<? extends TaskGenerator<? extends Task>>, Map<String, Object>>> generatorArgsList;
 
 
@@ -20,7 +20,7 @@ public class GroupTaskGenerator extends GeneratorCreator implements TaskGenerato
     }
 
     public GroupTaskGenerator(Collection<TaskGenerator<? extends Task>> generators) {
-        this.generators = generators;
+        this.generators = (ArrayList<TaskGenerator<? extends Task>>) generators;
         this.generatorArgsList = null;
     }
 
@@ -30,7 +30,7 @@ public class GroupTaskGenerator extends GeneratorCreator implements TaskGenerato
     }
 
     @Override
-    public Task generate() throws NoSufficientGeneratorsException {
+    public Task generate() {
         if (generators.isEmpty() && generatorArgsList != null) {
             for (Pair<Class<? extends TaskGenerator<? extends Task>>, Map<String, Object>> pair : generatorArgsList) {
                 generators.add(createGenerator(pair.key(), pair.value()));
@@ -40,11 +40,7 @@ public class GroupTaskGenerator extends GeneratorCreator implements TaskGenerato
         Random random = new Random();
         while (!generators.isEmpty()) {
             int index = random.nextInt(generators.size());
-            var iterator = generators.iterator();
-            TaskGenerator<? extends Task> generator = iterator.next();
-            while (iterator.hasNext() && --index > 0) {
-                generator = iterator.next();
-            }
+            TaskGenerator<? extends Task> generator = generators.get(index);
             try {
                 Task task = generator.generate();
                 generators.addAll(removed);
@@ -52,7 +48,7 @@ public class GroupTaskGenerator extends GeneratorCreator implements TaskGenerato
                 return task;
             } catch (RuntimeException e) {
                 removed.add(generator);
-                iterator.remove();
+                generators.remove(index);
             }
         }
         generators.addAll(removed);

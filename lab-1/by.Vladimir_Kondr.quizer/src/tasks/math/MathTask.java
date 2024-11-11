@@ -13,12 +13,12 @@ public interface MathTask extends Task {
         DIVISION("/");
 
         private final String symbol;
-        private static final int accuracy = 2;
-        public static int pow10() {
-            return (int) Math.pow(10, accuracy);
+        private static final double accuracy = 2;
+        public static double pow10() {
+            return Math.pow(10.0, accuracy);
         }
 
-        public static int getAccuracy() {
+        public static double getAccuracy() {
             return accuracy;
         }
 
@@ -30,16 +30,16 @@ public interface MathTask extends Task {
             return symbol;
         }
 
-        public int perform(Integer a, Integer b) throws ArithmeticException {
+        public int perform(Integer a, Integer b) {
             return switch (this) {
-                case ADDITION -> (a + b) * pow10();
-                case SUBTRACTION -> (a - b) * pow10();
-                case MULTIPLICATION -> a * b * pow10();
+                case ADDITION -> (int) ((a + b) * pow10());
+                case SUBTRACTION -> (int) ((a - b) * pow10());
+                case MULTIPLICATION -> (int) (a * b * pow10());
                 case DIVISION -> {
                     if (b == 0) {
                         throw new ArithmeticException("Division by zero is not allowed");
                     }
-                    yield (int) ((double) a / (double) b) * pow10();
+                    yield (int) (((double) a / (double) b) * pow10());
                 }
             };
         }
