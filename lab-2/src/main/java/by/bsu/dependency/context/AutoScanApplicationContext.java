@@ -1,52 +1,31 @@
 package by.bsu.dependency.context;
 
+import by.bsu.dependency.annotation.Bean;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ConfigurationBuilder;
+
 public class AutoScanApplicationContext extends AbstractApplicationContext {
 
     /**
-     * Создает контекст, содержащий классы из пакета {@code packageName}, помеченные аннотацией {@code @Bean}.
+     * Creates a context containing classes from the package {@code packageName} annotated with {@code @Bean}.
      * <br/>
-     * Если имя бина в анноации не указано ({@code name} пустой), оно берется из названия класса.
+     * If the bean name is not specified in the annotation ({@code name} is empty), it is taken from the class name.
      * <br/>
-     * Подразумевается, что у всех классов, переданных в списке, есть конструктор без аргументов.
+     * It is assumed that all classes passed in the list have a no-argument constructor.
      *
-     * @param packageName имя сканируемого пакета
+     * @param packageNames the name of the package to scan
      */
-    public AutoScanApplicationContext(String packageName) {
-        throw new IllegalStateException("not implemented");
+    public AutoScanApplicationContext(String ... packageNames) {
+        super(getAnnotatedClasses(packageNames));
     }
 
-    @Override
-    public void start() {
-        throw new IllegalStateException("not implemented");
-    }
-
-    @Override
-    public boolean isRunning() {
-        throw new IllegalStateException("not implemented");
-    }
-
-    @Override
-    public boolean containsBean(String name) {
-        throw new IllegalStateException("not implemented");
-    }
-
-    @Override
-    public Object getBean(String name) {
-        throw new IllegalStateException("not implemented");
-    }
-
-    @Override
-    public <T> T getBean(Class<T> clazz) {
-        throw new IllegalStateException("not implemented");
-    }
-
-    @Override
-    public boolean isPrototype(String name) {
-        throw new IllegalStateException("not implemented");
-    }
-
-    @Override
-    public boolean isSingleton(String name) {
-        throw new IllegalStateException("not implemented");
+    private static Class<?>[] getAnnotatedClasses(String... packageNames) {
+        Reflections reflections = new Reflections(packageNames, Scanners.TypesAnnotated);
+        return reflections.getTypesAnnotatedWith(Bean.class).toArray(Class[]::new);
     }
 }
