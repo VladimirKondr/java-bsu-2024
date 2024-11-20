@@ -62,17 +62,23 @@ public class ExampleUsage {
         dataSource.setFeatureToggle("cacheEnabled", true);
         System.out.println("Cache enabled:");
         Repository repository = context.getBean(Repository.class);
+        long startCache = System.currentTimeMillis();
         System.out.println(repository.fetchData("key1"));
         System.out.println(repository.fetchData("key2"));
         System.out.println(repository.fetchData("key1"));
+        long endCache = System.currentTimeMillis();
+        System.out.println("Cache fetching time: " + (endCache - startCache) + " ms");
         System.out.print("\n\n");
 
         // Demonstrate with cacheEnabled = false
         dataSource.setFeatureToggle("cacheEnabled", false);
         System.out.println("Cache disabled:");
+        long startNoCache = System.currentTimeMillis();
         System.out.println(repository.fetchData("key1"));
         System.out.println(repository.fetchData("key2"));
         System.out.println(repository.fetchData("key1"));
+        long endNoCache = System.currentTimeMillis();
+        System.out.println("No cache fetching time: " + (endNoCache - startNoCache) + " ms");
         System.out.print("\n\n");
     }
 }

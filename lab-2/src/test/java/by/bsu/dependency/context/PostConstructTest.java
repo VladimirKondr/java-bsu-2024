@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PostConstructTest {
 
-    private AutoScanApplicationContext context;
+    private SimpleApplicationContext context;
 
     @BeforeAll
     public static void init() {
@@ -24,7 +24,7 @@ public class PostConstructTest {
 
     @BeforeEach
     public void setUp() {
-        context = new AutoScanApplicationContext("by.bsu.dependency.TestBeans", "by.bsu.dependency.example");
+        context = new SimpleApplicationContext(PCBean.class, DependentBean.class, MegaBean.class, SingletonBean.class, FirstBean.class);
         context.start();
     }
 
