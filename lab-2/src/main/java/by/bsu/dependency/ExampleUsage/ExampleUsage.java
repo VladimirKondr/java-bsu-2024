@@ -11,7 +11,7 @@ public class ExampleUsage {
      * Tries to simulate work with a database using a data source and a repository.
      * Demonstrates the difference between sequential and parallel data fetching, utilizing prototype beans.
      * Demonstrates the usage of the cache service.
-     * Demonstrates the usage of feature toggles made possible by utilizing sibgleton beans.
+     * Demonstrates the usage of feature toggles made possible by utilizing singleton beans.
      */
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         AutoScanApplicationContext context = new AutoScanApplicationContext("by.bsu.dependency.ExampleUsage");

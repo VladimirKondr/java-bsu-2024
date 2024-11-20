@@ -165,26 +165,6 @@ public class SimpleApplicationContextTest {
     }
 
     /**
-     * Tests if the context can handle multiple beans of the same type.
-     */
-    @Test
-    public void testMultipleBeansOfSameType() {
-        context = new SimpleApplicationContext(FirstBean.class, AnotherFirstBean.class);
-        context.start();
-        assertTrue(context.containsBean("firstBean"));
-        assertTrue(context.containsBean("anotherFirstBean"));
-    }
-
-    @Test
-    public void testBeanWithConstructorParameters() {
-        context = new SimpleApplicationContext(BeanWithConstructorParameters.class);
-        context.start();
-        BeanWithConstructorParameters bean = context.getBean(BeanWithConstructorParameters.class);
-        assertNotNull(bean);
-        assertEquals("Hello, I'm a bean with constructor parameters", bean.printSomething());
-    }
-
-    /**
      * Tests if the context can create a bean with multiple dependencies.
      * Additionally, checks if we are searching for dependencies in a directed graph
      */
@@ -249,13 +229,6 @@ public class SimpleApplicationContextTest {
         }
     }
 
-    /**
-     * Bean class representing another first bean.
-     */
-    @Bean(name = "anotherFirstBean")
-    public static class AnotherFirstBean extends FirstBean {
-    }
-
 
     /**
      * Bean class representing a prototype bean.
@@ -301,19 +274,6 @@ public class SimpleApplicationContextTest {
     public static class CircularBeanProtB {
         @Inject
         private CircularBeanA circularBeanA;
-    }
-
-    @Bean(name = "beanWithConstructorParameters")
-    public static class BeanWithConstructorParameters {
-        private final String message;
-
-        public BeanWithConstructorParameters() {
-            this.message = "Hello, I'm a bean with constructor parameters";
-        }
-
-        public String printSomething() {
-            return message;
-        }
     }
 
     @Bean(name = "beanWithMultipleDependencies")

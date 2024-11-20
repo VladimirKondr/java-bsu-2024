@@ -1,9 +1,15 @@
 package by.bsu.dependency.context;
 
+import by.bsu.dependency.annotation.Bean;
+import by.bsu.dependency.annotation.Inject;
+import by.bsu.dependency.annotation.PostConstruct;
 import by.bsu.dependency.example.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,5 +71,104 @@ public class PostConstructTest {
 
         singletonBean.useMegaBean();
         assertTrue(megaBean.isInitialized(), "MegaBean should be initialized when used");
+    }
+
+    @Bean
+    public static class DependentBean {
+        @Inject
+        private PCBean dependency;
+
+        private boolean initialized = false;
+
+        @PostConstruct
+        public void init() {
+            initialized = true;
+        }
+
+        public boolean isInitialized() {
+            return initialized;
+        }
+
+        public PCBean getDependency() {
+            if (!initialized || dependency == null) {
+                throw new IllegalStateException("Bean is not initialized yet.");
+            }
+            return dependency;
+        }
+    }
+
+    @Bean
+    public static class SingletonBean {
+        @Inject
+        private MegaBean megaBean;
+
+        public void useMegaBean() {
+            if (!megaBean.isInitialized()) {
+                throw new IllegalStateException("MegaBean is not initialized yet.");
+            }
+            megaBean.doSomething();
+        }
+    }
+
+    @Bean(name = "megaBean")
+    public static class MegaBean {
+        private boolean isInitialized = false;
+        private boolean multipleInitialized = false;
+        private final List<String> initializationOrder = new ArrayList<>();
+
+        @Inject
+        private FirstBean firstBean;
+
+        @PostConstruct
+        public void init() {
+            isInitialized = true;
+            initializationOrder.add("init1");
+        }
+
+        @PostConstruct
+        public void secondInit() {
+            multipleInitialized = true;
+            initializationOrder.add("init2");
+        }
+
+        public void doSomething() {
+            if (!isInitialized || firstBean == null) {
+                throw new IllegalStateException("Bean is not initialized yet.");
+            }
+            System.out.println("MegaBean is doing something.");
+        }
+
+        public boolean isMultipleInitialized() {
+            return multipleInitialized;
+        }
+
+        public List<String> getInitializationOrder() {
+            return initializationOrder;
+        }
+
+        public boolean isInitialized() {
+            return isInitialized;
+        }
+    }
+
+    @Bean(name = "exampleBean")
+    public static class PCBean {
+        public boolean isInitialized = false;
+
+        @Inject
+        private FirstBean firstBean;
+
+        @PostConstruct
+        public void init() {
+            isInitialized = true;
+            System.out.println("PostConstruct method called. FirstBean is initialized: " + (firstBean != null));
+        }
+
+        public Object getFirstBean() {
+            if (!isInitialized || firstBean == null) {
+                throw new IllegalStateException("Bean is not initialized yet.");
+            }
+            return firstBean;
+        }
     }
 }

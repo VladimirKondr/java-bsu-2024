@@ -7,6 +7,10 @@ import by.bsu.dependency.annotation.PostConstruct;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * A prototype service that processes data asynchronously.
+ * Uses a repository to fetch data.
+ */
 @Bean(name = "prototypeService", scope = BeanScope.PROTOTYPE)
 public class PrototypeService {
     private static int instanceCounter = 0;
@@ -32,6 +36,12 @@ public class PrototypeService {
         return instanceId;
     }
 
+    /**
+     * Processes the data for the specified key asynchronously.
+     *
+     * @param key the key to process data for
+     * @return a future that will contain the processed data
+     */
     public CompletableFuture<String> processPrototypeDataAsync(String key) {
         return CompletableFuture.supplyAsync(() -> repository.fetchData(key) + " and processed by prototype data in instance " + instanceId);
     }
